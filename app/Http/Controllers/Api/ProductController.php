@@ -13,30 +13,20 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected ProductService $productService;
-    protected ApiException $exception;
-
-    public function __construct(ProductService $productService, ApiException $excetion)
-    {
-        $this->productService = $productService;
-        $this->exception = $excetion;
-    }
+    public function __construct(protected ProductService $productService)
+    {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try {
-            $data = $this->productService->getAllCategory();
+        $data = $this->productService->getAllCategory();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => ProductResource::collection($data)
-            ], 200);
-        } catch (Exception $e) {
-            return $this->exception->render($e, 'gagal mengambil product');
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => ProductResource::collection($data)
+        ], 200);
     }
 
     /**
@@ -44,17 +34,13 @@ class ProductController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        try {
-            $validasi = $request->validated();
-            $data = $this->productService->createCategory($validasi);
+        $validasi = $request->validated();
+        $data = $this->productService->createCategory($validasi);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => new ProductResource($data)
-            ], 201);
-        } catch (Exception $e) {
-            return $this->exception->render($e, 'gagal membuat product');
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => new ProductResource($data)
+        ], 201);
     }
 
     /**
@@ -62,16 +48,12 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        try {
-            $data = $this->productService->getByIdCategory($id);
+        $data = $this->productService->getByIdCategory($id);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => new ProductResource($data)
-            ], 200);
-        } catch (Exception $e) {
-            return $this->exception->render($e, 'gagal mengambil product');
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => new ProductResource($data)
+        ], 200);
     }
 
     /**
@@ -79,17 +61,13 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        try {
-            $validasi = $request->validated();
-            $data = $this->productService->updateCategory($id, $validasi);
+        $validasi = $request->validated();
+        $data = $this->productService->updateCategory($id, $validasi);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => new ProductResource($data)
-            ], 200);
-        } catch (Exception $e) {
-            return $this->exception->render($e, 'gagal update product');
-        }
+        return response()->json([
+            'status' => 'success',
+            'data' => new ProductResource($data)
+        ], 200);
     }
 
     /**
@@ -97,16 +75,12 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
-            $data = $this->productService->getByIdCategory($id);
-            $this->productService->delete($id);
+        $data = $this->productService->getByIdCategory($id);
+        $this->productService->delete($id);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => "menghapus product ({$data['name']})"
-            ], 200);
-        } catch (Exception $e) {
-            return $this->exception->render($e, 'gagal hapus product');
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => "menghapus product ({$data['name']})"
+        ], 200);
     }
 }

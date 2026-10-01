@@ -4,6 +4,7 @@ namespace App\Http\Requests\Product;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class UpdateRequest extends FormRequest
 {
@@ -27,6 +28,14 @@ class UpdateRequest extends FormRequest
             'price' => 'sometimes|integer|min:0',
             'stock' => 'sometimes|integer|min:0',
             'category' => 'sometimes|in:makanan,minuman'
+        ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        return [
+            'category.in' => 'category hanya boleh [makanan] dan [minuman]'
         ];
     }
 }
